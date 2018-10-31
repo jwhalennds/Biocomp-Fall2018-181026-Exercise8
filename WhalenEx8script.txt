@@ -1,0 +1,42 @@
+#Problem 1
+games=read.csv(file = "UWvMSU_1-22-13.csv", stringsAsFactors = FALSE)
+times=games$time #subsetting to get the time points
+time_score=data.frame(time=times, UW_score=rep(NA,50), MSU_score=rep(NA, 50)) #creating an empty data frame to put the cumulative score data in at the times given
+
+
+UW_total_score=0 #beginning UW total score at 0 for time 0
+MSU_total_score=0 # beginning MSU total score at 0 for time 0
+for (i in 1:nrow(games)) { #for i in length of the number of obsvervations (50)
+    if (games[i, 2]=="UW"){ #if the second column (team) of the i-th row is UW
+    UW_total_score=games[i, 3]+UW_total_score #UW total score will equal the score for i-th obvservation plus the total score (cumulative score of the previous observations)
+    time_score[i, 2]=UW_total_score #inserting UW total score into the empty data frame at the i-th observation
+    time_score[i, 3]=MSU_total_score #inserting MSU total score into empty data frame at the i-th observation
+  }else{ #if team in i-th row is not UW
+    MSU_total_score=games[i, 3]+MSU_total_score #MSU total score will equal the score for i-th obvservation plus the total score (cumulative score of the previous observations)
+    time_score[i, 3]=MSU_total_score #inserting MSU total score into empty data frame at the i-th observation
+    time_score[i, 2]=UW_total_score #inserting UW total score into the empty data frame at the i-th observation
+  }
+}
+
+plot(x=time_score$time, y=time_score$UW_score, type = "l", xlab = "Time (minutes)", ylab = "Total points", col="red") #plotting red line graph of the time in the game versus UW's total score
+lines(time_score$time, time_score$MSU_score, type = "l", col="blue") #adding a second line of time in game vs. total score of MSU, line is blue
+legend(x=25, y=20, legend = "UW", fill="red") #adding a legend for UW
+legend(x=25, y=10, legend = "MSU", fill = "blue") #adding a legend for MSU
+
+
+#Problem 2
+
+
+n=sample(x=1:100, size = 1) #creates an object n of one random number between 1 and 100
+guess_a_number<- function(){ #creates a function to use readline function later
+  num=readline(prompt = "Guess a number: ")#assigns the guess from the readline prompt to num
+}
+while (num!=n) { #while num doesn't equal n, it will run through the following code
+  num=guess_a_number() #assigns the function and resulting guess for the readline to num
+  if (num<n){ #if num is less than n
+    print("higher")} #print higher
+  else if (num>n){ #if num is more than n
+    print("lower")} #print lower
+  else  if (num==n){ #if num equals n
+    print("correct")} #print correct
+  }
